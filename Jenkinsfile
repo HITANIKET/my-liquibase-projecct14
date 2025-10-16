@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        DB_URL = 'jdbc:oracle:thin:@45.114.142.57:1525/YIPDV'
+        DB_URL = 'jdbc:oracle:thin:@10.37.0.103:1521/OFSUATDB'
         MAVEN_HOME = tool 'Maven'
         PATH = "${MAVEN_HOME}/bin:${PATH}"
     }
@@ -37,7 +37,7 @@ pipeline {
         stage('Clear Liquibase Locks') {
             steps {
                 echo 'Clearing any Liquibase locks...'
-                withCredentials([usernamePassword(credentialsId: 'YIPBL',
+                withCredentials([usernamePassword(credentialsId: 'OFSUATDB',
                                                  usernameVariable: 'DB_USERNAME',
                                                  passwordVariable: 'DB_PASSWORD')]) {
                     bat '''
@@ -53,7 +53,7 @@ pipeline {
         stage('Fix Checksum Issues') {
             steps {
                 echo 'Clearing checksum validation issues...'
-                withCredentials([usernamePassword(credentialsId: 'YIPBL',
+                withCredentials([usernamePassword(credentialsId: 'OFSUATDB',
                                                  usernameVariable: 'DB_USERNAME',
                                                  passwordVariable: 'DB_PASSWORD')]) {
                     script {
@@ -78,7 +78,7 @@ pipeline {
                 echo 'Testing database connection...'
                 script {
                     try {
-                        withCredentials([usernamePassword(credentialsId: 'YIPBL',
+                        withCredentials([usernamePassword(credentialsId: 'OFSUATDB',
                                                          usernameVariable: 'DB_USERNAME',
                                                          passwordVariable: 'DB_PASSWORD')]) {
                             bat '''
@@ -99,7 +99,7 @@ pipeline {
         stage('Liquibase Update') {
             steps {
                 echo 'Running Liquibase database migrations...'
-                withCredentials([usernamePassword(credentialsId: 'YIPBL',
+                withCredentials([usernamePassword(credentialsId: 'OFSUATDB',
                                                  usernameVariable: 'DB_USERNAME',
                                                  passwordVariable: 'DB_PASSWORD')]) {
                     bat '''
@@ -115,7 +115,7 @@ pipeline {
         stage('Generate Changelog Report') {
             steps {
                 echo 'Generating changelog report...'
-                withCredentials([usernamePassword(credentialsId: 'YIPBL',
+                withCredentials([usernamePassword(credentialsId: 'OFSUATDB',
                                                  usernameVariable: 'DB_USERNAME',
                                                  passwordVariable: 'DB_PASSWORD')]) {
                     bat '''
